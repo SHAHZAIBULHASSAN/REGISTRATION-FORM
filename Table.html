@@ -1,0 +1,225 @@
+
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+</head>
+<style>
+
+#table th
+{
+    font-weight: bold;
+    text-transform:uppercase;
+}
+
+h2{
+    text-align: center;;
+}
+div{
+margin-left: 12px;
+margin-bottom: 1px;
+margin-right: 12px;
+}
+</style>
+<body>
+    <h2>Custom Information</h2>
+    
+    <div>
+    <button type="button" id="success" onclick="Calculate()" class="btn btn-success">Total Salary</button>
+    <p id="result" ></p>
+  
+<table id="table" class="table table-bordered table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>firstName</th>
+                <th>lastName</th>
+                <th>address</th>
+                <th>contactNumber</th>
+                <th>age</th>
+                <th>dob</th>
+                <th>salary</th>
+                <th>imageUrl</th>
+                <th>Operations</th>
+                
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+
+
+</html>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script src="dist/table-renderer.js"></script>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script lang="en" type="text/javascript">
+
+  
+
+
+    $(document).ready(function () {
+//https://hub.dummyapis.com/employee?noofRecords=100&idStarts=1001
+            $.getJSON("https://hub.dummyapis.com/employee?noofRecords=100&idStarts=1001",
+                function (data) {
+                    var student = '';
+                   
+                
+                   
+
+                    // ITERATING THROUGH OBJECTS
+                    $.each(data, function (key, value) {
+
+                        //CONSTRUCTION OF ROWS HAVING
+                        // DATA FROM JSON OBJECT
+                        student += "<tr id='id' name='id'>";
+                        student += '<td>' +
+                            value.id + '</td>';
+
+                        student += '<td>' +
+                            value.firstName+ '</td>';
+
+                        student += '<td>' +
+                            value.lastName + '</td>';
+
+                        student += '<td>' +
+                            value.address + '</td>';
+                         student += '<td>' +
+                            value.contactNumber + '</td>';
+                             student += '<td>' +
+                            value.age + '</td>';
+                             student += '<td>' +
+                            value.dob + '</td>';
+                             student += "<td id='salary'>" +
+                            value.salary + '</td>';
+                             student += '<td>' +
+                            value.imageUrl + '</td>';
+                            student += '<td>'+
+                                "<button type='button' onclick='BuildTableRow(this);' class='btn btn-info btn-xs btn-edit'>Edit</button>"+
+                            
+                                "<button style='margin-left:6px' class='btn btn-danger btn-xs btn-delete' type='button' onclick='RecordDelete(this);'>Delete</button>"+
+                             '</td>';
+                            
+                       
+                        student += '</tr>';
+
+                       
+                        // $("#id").val('');  
+                    });
+
+                    //INSERTING ROWS INTO TABLE
+                    $('#table').append(student);
+                }); 
+
+                debugger;
+
+       $("body").on("click", ".btn-edit", function(){
+          
+        
+
+        
+        var id = $(this).parents("tr").attr('value-id');
+     
+        var id = $(this).parents("tr #id").attr('value.id');;  
+        //alert(id);
+        var name = $(this).parents("tr").attr('value.firstName');  
+      alert(name);
+        $(this).parents("tr").find("td:eq(0)").html('<input name="id" value="'+id+'">');  
+        $(this).parents("tr").find("td:eq(1)").html('<input name="email" value="'+name+'">');  
+      
+        $(this).parents("tr").find("td:eq(9)").prepend("<button  style='margin-left:6px'class='btn btn-info btn-xs btn-update'>Update</button><button style='margin-left:6px' class='btn btn-warning btn-xs btn-cancel'>Cancel</button>")  
+        $(this).hide();  
+    });  
+     
+    $("body").on("click", ".btn-cancel", function(){  
+        var id = $(this).parents("tr").attr('data.id');  
+        var email = $(this).parents("tr").attr('data-email');  
+      
+        $(this).parents("tr").find("td:eq(0)").text(id);  
+        $(this).parents("tr").find("td:eq(1)").text(email);  
+     
+        $(this).parents("tr").find(".btn-edit").show();  
+        $(this).parents("tr").find(".btn-update").remove();  
+        $(this).parents("tr").find(".btn-cancel").remove();  
+    });  
+     
+    $("body").on("click", ".btn-update", function(){  
+        var id = $(this).parents("tr").find("input[name='edit_name']").val();  
+        var email = $(this).parents("tr").find("input[name='edit_email']").val();  
+      
+        $(this).parents("tr").find("td:eq(0)").text(id);  
+        $(this).parents("tr").find("td:eq(1)").text(email);  
+       
+        $(this).parents("tr").attr('data-id', id);  
+        $(this).parents("tr").attr('data-email', email);  
+      
+        $(this).parents("tr").find(".btn-edit").show();  
+        $(this).parents("tr").find(".btn-cancel").remove();  
+        $(this).parents("tr").find(".btn-update").remove();  
+    });  
+
+
+
+
+
+
+
+
+
+
+    });
+
+//
+    
+
+//
+
+</script>
+<script>
+function Calculate(){
+
+
+    var TotalValue = 0;
+
+$("tr #salary").each(function(index,value){
+  currentRow = parseFloat($(this).text());
+  TotalValue += currentRow
+ 
+});
+
+ document.getElementById('result').innerHTML = TotalValue;
+
+
+
+}
+function RecordDelete(ctl) {
+    $(ctl).parents("tr").remove();
+}
+function BuildTableRow() {
+    var ret = "<tr>" +
+        "<td>" +
+        "<button type='button' onclick='productDisplay(this);' class='btn btn-default'>" +
+        "<span class='glyphicon glyphicon-edit' />" +
+        "</button>" +
+        "</td>" +
+        "<td>" + $("#productname").val() + "</td>" +
+        "<td>" + $("#introdate").val() + "</td>" +
+        "<td>" + $("#url").val() + "</td>" +
+        "<td>" +
+        "<button type='button' onclick='productDelete(this);' class='btn btn-default'>" +
+        "<span class='glyphicon glyphicon-remove' />" +
+        "</button>" +
+        "</td>" +
+        "</tr>"
+
+    return ret;
+}
+
+
+    </script>
